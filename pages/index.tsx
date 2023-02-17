@@ -1,18 +1,18 @@
-import Head from 'next/head'
-import { GetStaticProps, NextPage } from 'next'
-import Post from '../components/post'
-import { PostData, PostDataListProps } from '../types/postdata'
-import { GetPosts } from '../lib/postdata_api'
+import Head from "next/head";
+import { GetStaticProps, NextPage } from "next";
+import Post from "../components/post";
+import { PostData, PostDataListProps } from "../types/postdata";
+import { GetPosts } from "../lib/postdata_api";
 
 export const getStaticProps: GetStaticProps = async (_context) => {
   // fetch list of posts
-  const posts: PostData[] = await GetPosts()
+  const posts: PostData[] = await GetPosts();
   return {
     props: {
       postDataList: posts,
     },
-  }
-}
+  };
+};
 
 const IndexPage: NextPage<PostDataListProps> = ({
   postDataList,
@@ -24,6 +24,7 @@ const IndexPage: NextPage<PostDataListProps> = ({
       </Head>
 
       <h1>List of posts</h1>
+      <h1>한글</h1>
 
       <section>
         {postDataList.map((post: PostData) => (
@@ -31,7 +32,7 @@ const IndexPage: NextPage<PostDataListProps> = ({
         ))}
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;
