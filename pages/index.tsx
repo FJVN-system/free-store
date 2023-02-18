@@ -1,15 +1,13 @@
 import Head from "next/head";
 import { GetStaticProps, NextPage } from "next";
-import Post from "../components/post";
-import { PostData, PostDataListProps } from "../types/postdata";
+import { PostData } from "../types/postdata";
 import { GetPosts } from "../api/postdata_api";
 import { globalStyles } from "../global";
 import { GetUsers } from "../api/user_api";
 import Header from "../components/header";
 import ProductList from "../components/productList";
-import { GetProducts } from "../api/products_api";
 
-export const getStaticProps: GetStaticProps = async (_context) => {
+export const getStaticProps: GetStaticProps = async () => {
   // fetch list of posts
   const posts: PostData[] = await GetPosts();
   const users = await GetUsers();
