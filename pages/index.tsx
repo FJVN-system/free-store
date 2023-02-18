@@ -36,7 +36,7 @@ const IndexPage: NextPage<any> = ({
         </Head>
         <Header />
         <ProductList />
-        추가1
+        만수형 바보
 
         {/* // {postDataList.map((post: PostData) => (
         //   <Post {...post} key={post.id} />
