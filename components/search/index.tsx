@@ -1,20 +1,7 @@
-import Head from "next/head";
-import { GetStaticProps, NextPage } from "next";
+import { NextPage } from "next";
 import styled from "@emotion/styled";
 
-// export const getStaticProps: GetStaticProps = async (_context) => {
-  // fetch list of posts
-//   const users = await GetUsers();
-//   return {
-//     props: {
-//       userDataList: users,
-//     },
-//   };
-// };
-const Search: NextPage<any> = ({
-  userDataList
-}: any) => {
-console.log("userDataList", userDataList)
+const Search: NextPage<any> = ({ }: any) => {
   return (
     <SearchContainer />
   );
