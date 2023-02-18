@@ -23,25 +23,26 @@ export const getStaticProps: GetStaticProps = async (_context) => {
   };
 };
 const IndexPage: NextPage<any> = ({
-  postDataList,userDataList
+  postDataList, userDataList
 }: any) => {
-console.log("postDataList",postDataList )
-console.log("userDataList",userDataList )
+  console.log("postDataList", postDataList)
+  console.log("userDataList", userDataList)
   return (
     <>
-    {globalStyles}
-    <div>
-      <Head>
-        <title>Home page</title>
-      </Head>
-      <Header />
-      <ProductList />
-      
+      {globalStyles}
+      <div>
+        <Head>
+          <title>Home page</title>
+        </Head>
+        <Header />
+        <ProductList />
+        추가
+
         {/* // {postDataList.map((post: PostData) => (
         //   <Post {...post} key={post.id} />
         // ))} */}
-      
-    </div>
+
+      </div>
     </>
   );
 };
