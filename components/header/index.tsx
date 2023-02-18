@@ -1,10 +1,9 @@
-import Head from "next/head";
 import { GetStaticProps, NextPage } from "next";
 import styled from "@emotion/styled";
 import Search from "../search";
 
 // export const getStaticProps: GetStaticProps = async (_context) => {
-  // fetch list of posts
+// fetch list of posts
 //   const users = await GetUsers();
 //   return {
 //     props: {
@@ -20,7 +19,7 @@ const Header: NextPage<any> = ({
     <HeaderContainer>
 
       <Search />
-      
+
     </HeaderContainer>
   );
 };
