@@ -36,7 +36,7 @@ const IndexPage: NextPage<any> = ({
         </Head>
         <Header />
         <ProductList />
-        추가
+        추가1
 
         {/* // {postDataList.map((post: PostData) => (
         //   <Post {...post} key={post.id} />
