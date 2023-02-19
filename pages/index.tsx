@@ -1,8 +1,14 @@
+import styled from "@emotion/styled";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { GetUsers } from "../api/user_api";
+import Cart from "../components/cart";
 import Header from "../components/header";
 import ProductList from "../components/productList";
 import { useCreateUser } from "../query/users";
+
+const BodyContainer = styled.div`
+  display: flex;
+`;
 
 export async function getStaticProps() {
   const queryClient = new QueryClient();
@@ -35,7 +41,10 @@ export default function IndexPage() {
       <button type="button" onClick={() => createUser.mutate()}>
         버튼
       </button>
-      <ProductList />
+      <BodyContainer>
+        <ProductList />
+        <Cart />
+      </BodyContainer>
     </div>
   );
 }

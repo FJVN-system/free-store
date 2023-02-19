@@ -176,6 +176,7 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
 
 // 스타일 컴포넌트
 const ProductListContainer = styled.div`
+  flex: 0.7;
   background-color: gray;
   padding: 2px;
 `;
