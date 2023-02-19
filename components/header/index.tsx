@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import React from "react";
-import Search from "../search";
 
 const HeaderContainer = styled.div`
   height: 30px;
@@ -9,9 +8,5 @@ const HeaderContainer = styled.div`
 `;
 
 export default function Header(): any {
-  return (
-    <HeaderContainer>
-      <Search />
-    </HeaderContainer>
-  );
+  return <HeaderContainer>헤더</HeaderContainer>;
 }

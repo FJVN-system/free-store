@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import {
   Hydrate,
   QueryClient,
@@ -12,6 +13,9 @@ export default function IndexPage({ Component, pageProps }: any) {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         {globalStyles}
+        <Head>
+          <title>FJVN</title>
+        </Head>
         <Component {...pageProps} />
       </Hydrate>
     </QueryClientProvider>

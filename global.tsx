@@ -6,7 +6,7 @@ export const globalStyles = (
       html,
       body {
         margin: 0;
-        background: papayawhip;
+        background: white;
         font-family: Helvetica, Arial, sans-serif;
       }
     `}
