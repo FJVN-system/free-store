@@ -6,6 +6,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { globalStyles } from "../global";
+import Layout from "../components/layout";
 
 export default function IndexPage({ Component, pageProps }: any) {
   const [queryClient] = React.useState(() => new QueryClient());
@@ -16,7 +17,9 @@ export default function IndexPage({ Component, pageProps }: any) {
         <Head>
           <title>FJVN</title>
         </Head>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </Hydrate>
     </QueryClientProvider>
   );
