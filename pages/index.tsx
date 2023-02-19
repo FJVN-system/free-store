@@ -1,5 +1,3 @@
-import React from "react";
-import Head from "next/head";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { GetUsers } from "../api/user_api";
 import Header from "../components/header";
@@ -27,18 +25,13 @@ export async function getStaticProps() {
 }
 export default function IndexPage() {
   const { data: usersData } = useQuery(["users"], GetUsers);
-  const createUser = useCreateUser({ userName: "affbcd" });
+  const createUser = useCreateUser({ userName: "affbcddsssddddddddddd" });
+  console.log("usersData", usersData);
 
   return (
     <div>
-      <Head>
-        <title>Home page</title>
-      </Head>
       <Header />
-      {usersData &&
-        usersData?.map((user: any) => (
-          <span key={user.id}>{user.userName}</span>
-        ))}
+
       <button type="button" onClick={() => createUser.mutate()}>
         버튼
       </button>
