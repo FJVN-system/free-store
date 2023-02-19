@@ -108,6 +108,7 @@ export async function getStaticProps() {
 export default function Cart() {
   const [data, setData] = useState(() => [...defaultData]);
 
+  // @ts-ignore
   const table = useReactTable({
     data,
     columns,
