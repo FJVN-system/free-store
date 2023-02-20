@@ -410,12 +410,13 @@ export default function ProductList() {
             table.setPageSize(Number(e.target.value));
           }}
         >
-          {[20, 50, 100].map((pageSize) => (
+          {[30, 50, 100].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               {pageSize}
             </option>
           ))}
         </select>
+        <span> 총 : {table.getRowModel().rows.length} 개</span>
       </div>
     </ProductListContainer>
   );

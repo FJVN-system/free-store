@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
+import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 
 import {
   createColumnHelper,
@@ -9,104 +9,80 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
+import { GetCredit } from "../../api/credit_api";
 
-type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
-};
-
-const defaultData: Person[] = [
-  {
-    firstName: "tanner",
-    lastName: "linsley",
-    age: 24,
-    visits: 100,
-    status: "In Relationship",
-    progress: 50,
-  },
-  {
-    firstName: "tandy",
-    lastName: "miller",
-    age: 40,
-    visits: 40,
-    status: "Single",
-    progress: 80,
-  },
-  {
-    firstName: "joe",
-    lastName: "dirte",
-    age: 45,
-    visits: 20,
-    status: "Complicated",
-    progress: 10,
-  },
-];
-
-const columnHelper = createColumnHelper<Person>();
-
-const columns: ColumnDef<Person, any>[] = [
-  columnHelper.accessor("firstName", {
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: "lastName",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("age", {
-    header: () => "Age",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("visits", {
-    header: () => <span>Visits</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("status", {
-    header: "Status",
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("progress", {
-    id: "progress",
-    header: "Profile Progress",
-    footer: (info) => info.column.id,
-  }),
-];
-
-const OrdersContainer = styled.div`
+const CreditContainer = styled.div`
   height: 200px;
   background-color: brown;
   flex: 0.3;
 `;
 
-// export async function getStaticProps() {
-//   //   const queryClient = new QueryClient();
-//   //   try {
-//   //     await Promise.all([queryClient.prefetchQuery(["products"], GetProducts)]);
-//   //     return {
-//   //       props: {
-//   //         dehydratedState: dehydrate(queryClient),
-//   //       },
-//   //     };
-//   //   } catch (e) {
-//   //     console.log("index 페이지 try 에러", e);
-//   //     return {
-//   //       notFound: true,
-//   //     };
-//   //   } finally {
-//   //     queryClient.clear();
-//   //   }
-// }
-
 export default function Orders() {
-  const [data, setData] = useState(() => [...defaultData]);
+  const {
+    data: creditData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["credits"],
+    queryFn: async () => {
+      const data = await GetCredit("inter-qwe", 22);
+      return data;
+    },
+  });
 
+  console.log("creditData", creditData);
+
+  // 컬럼 선언 및 설정
+  const columns = useMemo<ColumnDef<any, any>[]>(
+    () => [
+      {
+        accessorFn: (row) => row.id,
+        id: "id",
+        header: "ID",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.content,
+        id: "content",
+        header: "내용",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.deposit,
+        id: "deposit",
+        header: "입금",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.withdraw,
+        id: "withdraw",
+        header: "출금",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.balance,
+        id: "balance",
+        header: "잔액",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.memo,
+        id: "memo",
+        header: "메모",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.createdAt,
+        id: "createdAt",
+        header: "날짜",
+        cell: (info) => info.getValue(),
+      },
+    ],
+    [],
+  );
+
+  // 데이터 초기화
+  const data = useMemo(() => creditData || [], [creditData]);
   // @ts-ignore
   const table = useReactTable({
     data,
@@ -114,8 +90,7 @@ export default function Orders() {
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <OrdersContainer>
-      주문내역
+    <CreditContainer>
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -145,6 +120,66 @@ export default function Orders() {
           ))}
         </tbody>
       </table>
-    </OrdersContainer>
+      <div>
+        <button
+          type="button"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<<"}
+        </button>
+        <button
+          type="button"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <span>
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </strong>
+        </span>
+        <span>
+          <input
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              table.setPageIndex(page);
+            }}
+          />
+        </span>
+        <button
+          type="button"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+        <button
+          type="button"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {">>"}
+        </button>
+
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.target.value));
+          }}
+        >
+          {[30, 50, 100].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+        <span> 총 : {table.getRowModel().rows.length} 개</span>
+      </div>
+    </CreditContainer>
   );
 }
