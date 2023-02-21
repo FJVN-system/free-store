@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { GetOrders } from "../../api/orders_api";
+import { GetUser } from "../../api/user_api";
 
 const OrdersContainer = styled.div`
   height: 200px;
@@ -17,15 +18,16 @@ const OrdersContainer = styled.div`
 `;
 
 export default function Orders() {
+  const { data: user } = useQuery(["user"], () => GetUser(22));
+
   const { data: ordersData } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
-      const data = await GetOrders(11111, 22);
+      const data = await GetOrders(user?.companyId, user?.id);
       return data;
     },
   });
 
-  console.log("orders", ordersData);
   // 컬럼 선언 및 설정
   const columns = useMemo<ColumnDef<any, any>[]>(
     () => [

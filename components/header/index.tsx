@@ -27,6 +27,7 @@ export default function Header(): any {
         <Link href="/">회사이름</Link>
       </div>
       <RightContainer>
+        {/* // TODO 로그인 후 처리 */}
         <MenuButton>Hi! 유저이름</MenuButton>
         <MenuButton>
           <Link href="/orders">주문내역</Link>

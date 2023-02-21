@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
   ColumnDef,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { GetCredit } from "../../api/credit_api";
 
 const CreditContainer = styled.div`
@@ -18,19 +17,14 @@ const CreditContainer = styled.div`
 `;
 
 export default function Orders() {
-  const {
-    data: creditData,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: creditData } = useQuery({
     queryKey: ["credits"],
     queryFn: async () => {
+      // TODO 로그인 후 처리
       const data = await GetCredit(22222, 22);
       return data;
     },
   });
-
-  console.log("creditData", creditData);
 
   // 컬럼 선언 및 설정
   const columns = useMemo<ColumnDef<any, any>[]>(

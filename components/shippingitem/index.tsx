@@ -17,6 +17,7 @@ const ShippingItemsContainer = styled.div`
 `;
 
 export default function ShippingItems() {
+  // TODO 로그인 후 처리
   const {
     data: shippingItemsData,
     isLoading,
@@ -28,8 +29,6 @@ export default function ShippingItems() {
       return data;
     },
   });
-
-  console.log("shippingItemsData", shippingItemsData);
 
   // 컬럼 선언 및 설정
   const columns = useMemo<ColumnDef<any, any>[]>(
