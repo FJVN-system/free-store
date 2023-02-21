@@ -26,7 +26,7 @@ export default function Shippings() {
   } = useQuery({
     queryKey: ["shippings"],
     queryFn: async () => {
-      const data = await GetShipping("inter-qwe", 22);
+      const data = await GetShipping(22222, 22);
       return data;
     },
   });
@@ -97,9 +97,7 @@ export default function Shippings() {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  <Shipping row={row} flexRender={flexRender} />
-                </tr>
+                <Shipping key={row.id} row={row} flexRender={flexRender} />
               ))}
             </tbody>
           </table>

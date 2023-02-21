@@ -7,7 +7,7 @@ export default function Shipping({ row, flexRender }: any) {
     setAsd(!asd);
   };
   return (
-    <>
+    <tr>
       {row.getVisibleCells().map((cell: any) => (
         <td key={cell.id}>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -19,6 +19,6 @@ export default function Shipping({ row, flexRender }: any) {
         </button>
       </td>
       {asd && <ShippingItems />}
-    </>
+    </tr>
   );
 }

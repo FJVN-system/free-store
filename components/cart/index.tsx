@@ -90,7 +90,16 @@ const CartContainer = styled.div`
 export async function getStaticProps() {
   const queryClient = new QueryClient();
   try {
-    await Promise.all([queryClient.prefetchQuery(["cartitems"], GetCartItems)]);
+    // await Promise.all([queryClient.prefetchQuery(["cartitems"], GetCartItems)]);
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: ["cartitems"],
+        queryFn: async () => {
+          const data = await GetCartItems(33);
+          return data;
+        },
+      }),
+    ]);
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
@@ -107,7 +116,13 @@ export async function getStaticProps() {
 }
 
 export default function Cart() {
-  const { data: cartItemsData } = useQuery(["cartitems"], GetCartItems);
+  const { data: cartItemsData } = useQuery({
+    queryKey: ["cartitems"],
+    queryFn: async () => {
+      const data = await GetCartItems(33);
+      return data;
+    },
+  });
 
   console.log("cartItemsData", cartItemsData);
   // 컬럼 선언 및 설정
@@ -174,13 +189,14 @@ export default function Cart() {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) =>
-                cell.column.id === "progress" ? (
+                cell.column.id === "qty" ? (
                   <td key={cell.id}>
                     <CartQtyInput cell={cell} />
                   </td>
                 ) : (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    원
                   </td>
                 ),
               )}

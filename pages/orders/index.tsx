@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
   ColumnDef,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { GetOrders } from "../../api/orders_api";
 
 const OrdersContainer = styled.div`
@@ -18,7 +17,13 @@ const OrdersContainer = styled.div`
 `;
 
 export default function Orders() {
-  const { data: ordersData } = useQuery(["orders"], GetOrders);
+  const { data: ordersData } = useQuery({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      const data = await GetOrders(11111, 22);
+      return data;
+    },
+  });
 
   console.log("orders", ordersData);
   // 컬럼 선언 및 설정

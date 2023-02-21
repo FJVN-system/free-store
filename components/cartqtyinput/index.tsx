@@ -10,7 +10,6 @@ export default function CartQtyInput({ cell }: any) {
   const handleOccupation = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCellValue(event.currentTarget.value);
   };
-  console.log("cell", cell);
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log("submit");

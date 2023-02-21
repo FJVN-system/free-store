@@ -25,7 +25,7 @@ export default function Orders() {
   } = useQuery({
     queryKey: ["credits"],
     queryFn: async () => {
-      const data = await GetCredit("inter-qwe", 22);
+      const data = await GetCredit(22222, 22);
       return data;
     },
   });

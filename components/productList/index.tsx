@@ -191,7 +191,15 @@ export async function getStaticProps() {
   const queryClient = new QueryClient();
 
   try {
-    await Promise.all([queryClient.prefetchQuery(["products"], GetProducts)]);
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: ["products"],
+        queryFn: async () => {
+          const data = await GetProducts(11111);
+          return data;
+        },
+      }),
+    ]);
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
@@ -208,7 +216,13 @@ export async function getStaticProps() {
 }
 
 export default function ProductList() {
-  const { data: productData } = useQuery(["products"], GetProducts);
+  const { data: productData } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const data = await GetProducts(11111);
+      return data;
+    },
+  });
   console.log("productData", productData);
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -350,9 +364,10 @@ export default function ProductList() {
                     </td>
                   );
                 })}
-                <td>추가1</td>
-                <td>추가2</td>
-                <td>추가3</td>
+                <td style={{ display: "flex" }}>
+                  <input type="number" />
+                  <button type="button">담기</button>
+                </td>
               </TableRow>
             );
           })}
