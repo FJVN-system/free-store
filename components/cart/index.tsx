@@ -5,12 +5,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { GetUser } from "../../api/user_api";
 import {
   useGetCartItems,
   UseGetCartItemsForStaticProps,
 } from "../../query/cartitems";
+import { useCreateOrder } from "../../query/order";
 import CartQtyInput from "../cartqtyinput";
 import { cartItemsColumns } from "../tanstackTable/columns/cartItems";
 
@@ -41,6 +42,22 @@ export default function Cart() {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const { mutate: createOrder, isSuccess, data: succesData } = useCreateOrder();
+
+  const onSubmit = () => {
+    createOrder(user.id);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("succesData", succesData);
+      alert(
+        `${succesData.data.itemCount} 종류의 상품, ${succesData.data.itemQty} 개의 상품, 총 ${succesData.data.totalPrice}원의 상품이 주문되었습니다`,
+      );
+    }
+  }, [isSuccess, succesData]);
+
   return (
     <CartContainer>
       장바구니
@@ -87,7 +104,9 @@ export default function Cart() {
         </tbody>
       </table>
       <div>
-        <button type="button">주문하기</button>
+        <button type="button" onClick={() => onSubmit()}>
+          주문하기
+        </button>
       </div>
     </CartContainer>
   );
