@@ -12,9 +12,6 @@ export const useCreateOrder = () => {
     onSuccess: () => queryClient.invalidateQueries(["cartitems"]),
     onError: (e) => console.log(e),
     onSettled: (data, error, variables, context) => {
-      if (data && data.data && data.data.errorMessage) {
-        alert(data.data.errorMessage);
-      }
       // console.log("data", data);
       // console.log("error", error);
       // console.log("variables", variables);

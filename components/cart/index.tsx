@@ -50,8 +50,9 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      console.log("succesData", succesData);
+    if (succesData && succesData.data && succesData.data.errorMessage) {
+      alert(succesData.data.errorMessage);
+    } else if (isSuccess) {
       alert(
         `${succesData.data.itemCount} 종류의 상품, ${succesData.data.itemQty} 개의 상품, 총 ${succesData.data.totalPrice}원의 상품이 주문되었습니다`,
       );
