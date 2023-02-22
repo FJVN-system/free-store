@@ -68,14 +68,17 @@ export default function Cart() {
                 .getVisibleCells()
                 .map((cell) =>
                   cell.column.id === "qty" ? (
-                    <CartQtyInput key={cell.id} cell={cell} />
+                    <CartQtyInput
+                      key={cell.id}
+                      cell={cell}
+                      flexRender={flexRender}
+                    />
                   ) : (
                     <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
                       )}
-                      원
                     </td>
                   ),
                 )}
