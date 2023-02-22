@@ -1,5 +1,5 @@
 import { flexRender } from "@tanstack/react-table";
-import Filter from "../filter/Filter";
+// import Filter from "../filter/Filter";
 import ProductRow from "./productRow";
 
 export default function ProductListTable({ table }: any) {
@@ -30,11 +30,11 @@ export default function ProductListTable({ table }: any) {
                           desc: " 🔽",
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
-                      {header.column.getCanFilter() ? (
+                      {/* {header.column.getCanFilter() ? (
                         <div>
                           <Filter column={header.column} table={table} />
                         </div>
-                      ) : null}
+                      ) : null} */}
                     </>
                   )}
                 </th>

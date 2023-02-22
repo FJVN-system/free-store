@@ -1,12 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 export const cartItemsColumns: ColumnDef<any, any>[] = [
-  {
-    accessorFn: (row) => row.id,
-    id: "id",
-    header: "주문번호",
-    cell: (info) => info.getValue(),
-  },
+  // {
+  //   accessorFn: (row) => row.id,
+  //   id: "id",
+  //   header: "주문번호",
+  //   cell: (info) => info.getValue(),
+  // },
   {
     accessorFn: (row) => row.productTitle,
     id: "productTitle",
