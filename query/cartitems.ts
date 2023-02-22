@@ -58,17 +58,9 @@ export const useDeleteCart = () => {
 export const useModifyCart = () => {
   const queryClient = useQueryClient(); // queryClient는 전역변수이다. react-query로 불러온 모든 query를 관리가능하다.
   return useMutation(modifyCartItem, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["cartitems"]);
-      // alert("수정했습니다");
-    },
+    onSuccess: () => queryClient.invalidateQueries(["cartitems"]),
     onError: (e) => console.log(e),
     onSettled: (data, error, variables, context) => {
-      if (data && data.data && data.data.errorMessage) {
-        alert(data.data.errorMessage);
-      } else {
-        alert("수정했습니다");
-      }
       // console.log("data", data);
       // console.log("error", error);
       // console.log("variables", variables);
