@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
   ColumnDef,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { GetCredit } from "../../api/credit_api";
@@ -81,6 +82,8 @@ export default function Orders() {
   const table = useReactTable({
     data,
     columns,
+    initialState: { pagination: { pageSize: 30 } },
+    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
   });
   return (
@@ -172,7 +175,7 @@ export default function Orders() {
             </option>
           ))}
         </select>
-        <span> 총 : {table.getRowModel().rows.length} 개</span>
+        <span> 총 : {table.getPrePaginationRowModel().rows.length} 개</span>
       </div>
     </CreditContainer>
   );

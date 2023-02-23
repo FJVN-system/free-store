@@ -66,6 +66,7 @@ export default function Orders() {
   const table = useReactTable({
     data,
     columns,
+    initialState: { pagination: { pageSize: 30 } },
     getCoreRowModel: getCoreRowModel(),
   });
   return (
@@ -158,7 +159,7 @@ export default function Orders() {
             </option>
           ))}
         </select>
-        <span> 총 : {table.getRowModel().rows.length} 개</span>
+        <span> 총 : {table.getPrePaginationRowModel().rows.length} 개</span>
       </div>
     </OrdersContainer>
   );
