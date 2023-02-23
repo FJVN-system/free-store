@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { GetCredit } from "../../api/credit_api";
+import { GetUser } from "../../api/user_api";
 
 const CreditContainer = styled.div`
   height: 200px;
@@ -17,12 +18,15 @@ const CreditContainer = styled.div`
   flex: 0.3;
 `;
 
-export default function Orders() {
+export default function Credit() {
+  const { data: user } = useQuery<any>(["user"], async () => {
+    await GetUser(22);
+  });
   const { data: creditData } = useQuery({
     queryKey: ["credits"],
     queryFn: async () => {
       // TODO 로그인 후 처리
-      const data = await GetCredit(22222, 22);
+      const data = await GetCredit(22222, user?.id);
       return data;
     },
   });
