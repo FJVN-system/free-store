@@ -18,9 +18,10 @@ const OrdersContainer = styled.div`
 `;
 
 export default function Orders() {
-  const { data: user } = useQuery<any>(["user"], async () => {
+  const { data: userData } = useQuery<any>(["user"], async () => {
     await GetUser(22);
   });
+  const user = useMemo(() => userData || [], [userData]);
 
   const { data: ordersData } = useQuery({
     queryKey: ["orders"],
