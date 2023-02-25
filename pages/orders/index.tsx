@@ -1,5 +1,10 @@
 import styled from "@emotion/styled";
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   flexRender,
@@ -18,8 +23,11 @@ const OrdersContainer = styled.div`
 `;
 
 export default function Orders() {
-  const { data: userData } = useQuery<any>(["user"], async () => {
-    await GetUser(22);
+  const { data: userData } = useQuery<any>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      await GetUser(22);
+    },
   });
   const user = useMemo(() => userData || [], [userData]);
 
@@ -29,7 +37,9 @@ export default function Orders() {
       const data = await GetOrders(user?.companyId, user?.id);
       return data;
     },
+    enabled: !!userData,
   });
+  const data = useMemo(() => ordersData || [], [ordersData]);
 
   // 컬럼 선언 및 설정
   const columns = useMemo<ColumnDef<any, any>[]>(
@@ -63,7 +73,6 @@ export default function Orders() {
   );
 
   // 데이터 초기화
-  const data = useMemo(() => ordersData || [], [ordersData]);
 
   // @ts-ignore
   const table = useReactTable({

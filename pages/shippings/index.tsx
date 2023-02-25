@@ -10,7 +10,6 @@ import {
 import { useMemo } from "react";
 import { GetShipping } from "../../api/shipping_api";
 import Shipping from "../../components/shipping";
-import ShippingItems from "../../components/shippingitem";
 
 const ShippingContainer = styled.div`
   height: 200px;
@@ -30,8 +29,6 @@ export default function Shippings() {
       return data;
     },
   });
-
-  console.log("shippingData", shippingData);
 
   // 컬럼 선언 및 설정
   const columns = useMemo<ColumnDef<any, any>[]>(
