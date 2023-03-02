@@ -12,6 +12,7 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { GetShipping } from "../../api/shipping_api";
@@ -147,6 +148,8 @@ const NavInput = styled.input`
 `;
 
 export default function Shippings() {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const [globalFilter, setGlobalFilter] = useState("");
 
   const { data: userData } = useQuery(["user"], () => GetUser(22));
@@ -205,8 +208,13 @@ export default function Shippings() {
     data,
     columns,
     initialState: { pagination: { pageSize: 30 } },
+    state: {
+      columnFilters,
+      globalFilter,
+    },
     getCoreRowModel: getCoreRowModel(),
     onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
     globalFilterFn: fuzzyFilter,
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),

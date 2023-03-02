@@ -94,6 +94,12 @@ const TableHeaderCell = styled.div`
   cursor: pointer;
 `;
 
+const TableRow = styled.tr<any>`
+  border: 1px;
+  background-color: transparent;
+  text-align: center;
+`;
+
 const TableCell = styled.td<any>`
   padding: 5px 5px;
   border-bottom: 1px solid rgba(77, 130, 141, 0.2);
@@ -272,7 +278,7 @@ export default function Orders() {
                 </thead>
                 <tbody>
                   {table.getRowModel().rows.map((row: any) => (
-                    <ProductRow key={row.id} row={row}>
+                    <TableRow key={row.id} row={row}>
                       {row.getVisibleCells().map((cell: any) => {
                         return (
                           <TableCell key={cell.id} cell={cell}>
@@ -283,7 +289,7 @@ export default function Orders() {
                           </TableCell>
                         );
                       })}
-                    </ProductRow>
+                    </TableRow>
                   ))}
                 </tbody>
               </Table>

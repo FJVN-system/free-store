@@ -12,6 +12,7 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { GetCredit } from "../../api/credit_api";
@@ -94,6 +95,12 @@ const TableHeaderCell = styled.div`
   cursor: pointer;
 `;
 
+const TableRow = styled.tr<any>`
+  border: 1px;
+  background-color: transparent;
+  text-align: center;
+`;
+
 const TableCell = styled.td<any>`
   padding: 5px 5px;
   border-bottom: 1px solid rgba(77, 130, 141, 0.2);
@@ -139,6 +146,7 @@ const NavInput = styled.input`
 `;
 
 export default function Credit() {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
   const { data: userData } = useQuery(["user"], () => GetUser(22));
@@ -208,10 +216,15 @@ export default function Credit() {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      columnFilters,
+      globalFilter,
+    },
     initialState: { pagination: { pageSize: 30 } },
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
     globalFilterFn: fuzzyFilter,
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -277,7 +290,7 @@ export default function Credit() {
                 </thead>
                 <tbody>
                   {table.getRowModel().rows.map((row: any) => (
-                    <ProductRow key={row.id} row={row}>
+                    <TableRow key={row.id} row={row}>
                       {row.getVisibleCells().map((cell: any) => {
                         return (
                           <TableCell key={cell.id} cell={cell}>
@@ -288,7 +301,7 @@ export default function Credit() {
                           </TableCell>
                         );
                       })}
-                    </ProductRow>
+                    </TableRow>
                   ))}
                 </tbody>
               </Table>
