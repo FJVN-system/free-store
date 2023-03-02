@@ -1,7 +1,21 @@
+import styled from "@emotion/styled";
 import { Column, Table } from "@tanstack/react-table";
 
 import { useMemo } from "react";
 import DebouncedInput from "../debounceInput";
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  > input {
+    border-radius: 3px;
+    padding: 3px 5px;
+    margin: 3px 0px;
+    border: none;
+    outline: none;
+  }
+`;
 
 export default function Filter({
   column,
@@ -25,7 +39,7 @@ export default function Filter({
   );
 
   return typeof firstValue === "number" ? (
-    <div>
+    <FilterContainer>
       <DebouncedInput
         type="number"
         min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
@@ -54,9 +68,9 @@ export default function Filter({
             : ""
         }`}
       />
-    </div>
+    </FilterContainer>
   ) : (
-    <>
+    <FilterContainer>
       <datalist id={`${column.id}list`}>
         {sortedUniqueValues.slice(0, 5000).map((value: any) => (
           <option value={value} key={value}>
@@ -71,6 +85,6 @@ export default function Filter({
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         list={`${column.id}list`}
       />
-    </>
+    </FilterContainer>
   );
 }

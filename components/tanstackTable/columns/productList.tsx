@@ -3,6 +3,14 @@ import { fuzzySort } from "../sorter/fuzzySort";
 
 export const productListColumns: ColumnDef<any, any>[] = [
   {
+    accessorFn: (row) => row.category,
+    id: "category",
+    header: "Category",
+    cell: (info) => info.getValue(),
+    filterFn: "fuzzy",
+    sortingFn: fuzzySort,
+  },
+  {
     accessorFn: (row) => row.title,
     id: "title",
     header: "Title",
@@ -22,22 +30,15 @@ export const productListColumns: ColumnDef<any, any>[] = [
     accessorFn: (row) => row.price,
     id: "price",
     header: "price",
+    // enableColumnFilter: false,
     cell: (info) => info.getValue(),
-    filterFn: "fuzzy",
-    sortingFn: fuzzySort,
+    // filterFn: "fuzzy",
+    // sortingFn: fuzzySort,
   },
   {
     accessorFn: (row) => row.barcode,
     id: "barcode",
     header: "Barcode",
-    cell: (info) => info.getValue(),
-    filterFn: "fuzzy",
-    sortingFn: fuzzySort,
-  },
-  {
-    accessorFn: (row) => row.category,
-    id: "category",
-    header: "Category",
     cell: (info) => info.getValue(),
     filterFn: "fuzzy",
     sortingFn: fuzzySort,

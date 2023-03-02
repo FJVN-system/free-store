@@ -16,7 +16,6 @@ export const useGetProducts = (companyId: any) => {
 };
 
 export const useGetProductsByCategory = (companyId: any, category: any) => {
-  console.log("cat", category);
   return useQuery({
     queryKey: ["productsByCategory"],
     queryFn: async () => {
@@ -26,7 +25,7 @@ export const useGetProductsByCategory = (companyId: any, category: any) => {
     onError: (e) => {
       console.log("e", e);
     },
-    // enabled: !!companyId,
+    enabled: !!companyId,
   });
 };
 

@@ -1,7 +1,8 @@
+import { flexRender } from "@tanstack/react-table";
 import React, { useState } from "react";
 import ShippingItems from "../shippingitem";
 
-export default function Shipping({ row, flexRender }: any) {
+export default function Shipping({ row }: any) {
   const [asd, setAsd] = useState(false);
   const handler = () => {
     setAsd(!asd);

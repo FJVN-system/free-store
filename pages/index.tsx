@@ -17,13 +17,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import Cart from "../components/cart";
 import Header from "../components/header";
-import ProductList from "../components/productList";
 import { fuzzyFilter } from "../components/tanstackTable/filter/fuzzyFilter";
 import { productListColumns } from "../components/tanstackTable/columns/productList";
-import { useGetProducts, useGetProductsByCategory } from "../query/product";
+import { useGetProducts } from "../query/product";
 import { GetUser } from "../api/user_api";
 import ArrowDown from "../components/icons/ArrowDown";
 import ArrowUp from "../components/icons/ArrowUp";
+import Filter from "../components/tanstackTable/filter/Filter";
+import ProductRow from "../components/tanstackTable/productListTable/productRow";
 
 const BodyContainer = styled.div`
   display: flex;
@@ -35,56 +36,43 @@ const TopContainer = styled.div``;
 const BottomContainer = styled.div`
   display: flex;
 `;
+const CartContainer = styled.div`
+  flex: 0.3;
+`;
 
 const ProductListContainer = styled.div`
   flex: 0.7;
-  /* background-color: #ffffff; */
-  padding: 2px;
+  margin-top: 10px;
+`;
+
+const TitleContainer = styled.div`
+  font-weight: bold;
+  color: #152b7b;
+  font-size: 30px;
+  text-align: center;
 `;
 
 const TableContainer = styled.div`
-  padding: 15px 20px;
+  padding: 10px 10px;
   margin: 0px 20px 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: #fbfeff;
-`;
-
-const TopButtonContainer = styled.div`
-  display: flex;
-  border-bottom: 2px solid rgba(77, 130, 141, 0.2);
-`;
-
-const TopButton = styled.div<any>`
-  font-size: larger;
-  font-weight: 700;
-  color: ${(props: any): any => (props.dd ? "#2a62ff" : "gray")};
-  padding: 5px 10px 15px;
-  margin-bottom: -2px;
-  border-bottom: 2px
-    ${(props: any): any => (props.dd ? "#2a62ff" : "transparent")} solid;
-`;
-
-const SearchContainerWrapper = styled.div`
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding: 10px;
 `;
 
 const TotalPerPageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
-  color: #999bac;
+  color: gray;
   font-weight: bold;
+  margin-top: 10px;
 `;
 
 const PerPage = styled.select`
   height: 25px;
   margin: 0px 5px;
   font-size: 18px;
-  border-radius: 5px;
-  border-color: rgba(77, 130, 141, 0.7);
+  border-color: gray;
   background-color: transparent;
   color: #1b3d7c;
   outline: none;
@@ -102,7 +90,7 @@ const TableHeader = styled.tr`
 `;
 
 const TableHeaderCellWrapper = styled.th`
-  padding: 10px 20px;
+  padding: 3px 10px;
 `;
 
 const TableHeaderCell = styled.div`
@@ -112,60 +100,37 @@ const TableHeaderCell = styled.div`
   cursor: pointer;
 `;
 
-const TableRow = styled.tr`
-  border: 1px;
-  background-color: transparent;
-  text-align: center;
-`;
-
 const TableCell = styled.td<any>`
   padding: 5px 5px;
   border-bottom: 1px solid rgba(77, 130, 141, 0.2);
-  color: ${(props: any) =>
-    props.cell.column.id === "qty" ? "#30acc0" : "#1b3d7c"};
-  font-weight: ${(props: any) =>
-    props.cell.column.id === "qty" ? "bold" : "bold"};
-  font-size: ${(props: any) =>
-    props.cell.column.id === "qty" ? "18px" : "15px"};
 `;
 
 const NavButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0px;
 `;
 
-const NavButton1 = styled.button`
-  background-color: ${(props) => (props.disabled ? "#2a62ff" : "gray")};
-  color: ${(props) => (props.disabled ? "white" : "lightgray")};
+const NavButton = styled.button`
+  background-color: ${(props) => (props.disabled ? "gray" : "#152b7b")};
+  color: ${(props) => (props.disabled ? "lightgray" : "white")};
   border: none;
-  border-radius: 10px 0px 0px 10px;
-  height: 22px;
+  height: 26px;
+  width: 30px;
   font-weight: bold;
 `;
-const NavButton2 = styled.button`
-  background-color: ${(props) => (props.disabled ? "#2a62ff" : "gray")};
-  color: ${(props) => (props.disabled ? "white" : "lightgray")};
-  border: none;
-  height: 22px;
-  font-weight: bold;
-`;
+
 const NavText = styled.span`
   font-weight: bold;
   color: #1b3d7c;
   margin: 0px 5px;
 `;
 const NavInput = styled.input`
-  border: 1px solid rgba(77, 130, 141, 0.5);
-  /* outline: none; */
+  border: 1px solid lightgray;
   height: 22px;
   width: 50px;
-  border-radius: 5px;
-  margin-right: 5px;
   text-align: center;
   font-size: medium;
-  border-color: rgba(77, 130, 141, 0.7);
   background-color: transparent;
   color: #1b3d7c;
   outline: none;
@@ -178,40 +143,15 @@ const NavInput = styled.input`
     margin: 0;
   }
 `;
-const NavButton3 = styled.button`
-  background-color: ${(props) => (props.disabled ? "gray" : "#2c7580")};
-  color: ${(props) => (props.disabled ? "lightgray" : "white")};
-  border: none;
-  height: 22px;
-  font-weight: bold;
-`;
-const NavButton4 = styled.button`
-  background-color: ${(props) => (props.disabled ? "gray" : "#2c7580")};
-  color: ${(props) => (props.disabled ? "lightgray" : "white")};
-  border: none;
-  height: 22px;
-  border-radius: 0px 10px 10px 0px;
-  font-weight: bold;
-`;
+
 export default function IndexPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
   const { data: user } = useQuery(["user"], () => GetUser(22));
 
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const handleCategory = (e: any) => {
-    setSelectedCategory(e.target.id);
-  };
+  const { data: productData, isLoading } = useGetProducts(user?.companyId);
 
-  const { data: productData } = useGetProducts(user?.companyId);
-  const { data: productDataByCategory } = useGetProductsByCategory(
-    user?.companyId,
-    selectedCategory,
-  );
-
-  console.log("productData", productData);
-  console.log("productDataByCategory", productDataByCategory);
   // 데이터 초기화
   const data = useMemo(() => productData || [], [productData]);
 
@@ -250,20 +190,78 @@ export default function IndexPage() {
         <Header globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
       </TopContainer>
       <BottomContainer>
-        <ProductListContainer>
-          <TableContainer>
-            <TopButtonContainer>
-              <TopButton id="all" dd>
-                전체 {table.getPrePaginationRowModel().rows.length}
-              </TopButton>
-              <TopButton id="음반" onClick={handleCategory}>
-                CD 0
-              </TopButton>
-              <TopButton id="GOODS" onClick={handleCategory}>
-                GOODS 0
-              </TopButton>
-            </TopButtonContainer>
-            <SearchContainerWrapper>
+        {isLoading ? (
+          // TODO 스켈레톤 or 로더
+          "로딩중"
+        ) : (
+          <ProductListContainer>
+            <TitleContainer>상품</TitleContainer>
+            <TableContainer>
+              <Table>
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup: any) => (
+                    <TableHeader key={headerGroup.id}>
+                      {headerGroup.headers.map((header: any) => {
+                        return (
+                          <TableHeaderCellWrapper
+                            key={header.id}
+                            colSpan={header.colSpan}
+                          >
+                            {header.isPlaceholder ? null : (
+                              <>
+                                <TableHeaderCell
+                                  {...{
+                                    onClick:
+                                      header.column.getToggleSortingHandler(),
+                                  }}
+                                >
+                                  <div style={{ marginRight: "5px" }}>
+                                    {flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext(),
+                                    )}
+                                  </div>
+                                  {{
+                                    asc: <ArrowDown />,
+                                    desc: <ArrowUp />,
+                                  }[header.column.getIsSorted() as string] ?? (
+                                    <ArrowDown />
+                                  )}
+                                </TableHeaderCell>
+                                {header.column.getCanFilter() ? (
+                                  <Filter
+                                    column={header.column}
+                                    table={table}
+                                  />
+                                ) : null}
+                              </>
+                            )}
+                          </TableHeaderCellWrapper>
+                        );
+                      })}
+                      <TableHeaderCellWrapper>
+                        <TableHeaderCell>비고</TableHeaderCell>
+                      </TableHeaderCellWrapper>
+                    </TableHeader>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row: any) => (
+                    <ProductRow key={row.id} row={row}>
+                      {row.getVisibleCells().map((cell: any) => {
+                        return (
+                          <TableCell key={cell.id} cell={cell}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </ProductRow>
+                  ))}
+                </tbody>
+              </Table>
               <TotalPerPageContainer>
                 <span>
                   {" "}
@@ -284,109 +282,58 @@ export default function IndexPage() {
                 </PerPage>
                 개
               </TotalPerPageContainer>
-            </SearchContainerWrapper>
-
-            <Table>
-              <thead>
-                {table.getHeaderGroups().map((headerGroup: any) => (
-                  <TableHeader key={headerGroup.id}>
-                    {headerGroup.headers.map((header: any) => {
-                      return (
-                        <TableHeaderCellWrapper
-                          key={header.id}
-                          colSpan={header.colSpan}
-                        >
-                          {header.isPlaceholder ? null : (
-                            <TableHeaderCell
-                              {...{
-                                onClick:
-                                  header.column.getToggleSortingHandler(),
-                              }}
-                            >
-                              <div style={{ marginRight: "10px" }}>
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )}
-                              </div>
-                              {{
-                                asc: <ArrowDown />,
-                                desc: <ArrowUp />,
-                              }[header.column.getIsSorted() as string] ?? (
-                                <ArrowDown />
-                              )}
-                            </TableHeaderCell>
-                          )}
-                        </TableHeaderCellWrapper>
-                      );
-                    })}
-                  </TableHeader>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row: any) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell: any) => {
-                      return (
-                        <TableCell key={cell.id} cell={cell}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </tbody>
-            </Table>
-          </TableContainer>
-          <NavButtonContainer>
-            <NavButton1
-              type="button"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {"<<"}
-            </NavButton1>
-            <NavButton2
-              type="button"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {"<"}
-            </NavButton2>
-            <NavText>
-              {table.getState().pagination.pageIndex + 1} page of{" "}
-              {table.getPageCount()}
-            </NavText>
-            <span>
-              <NavInput
-                type="number"
-                defaultValue={table.getState().pagination.pageIndex + 1}
-                onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                  table.setPageIndex(page);
-                }}
-              />
-            </span>
-            <NavButton3
-              type="button"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {">"}
-            </NavButton3>
-            <NavButton4
-              type="button"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              {">>"}
-            </NavButton4>
-          </NavButtonContainer>
-        </ProductListContainer>
-        <Cart />
+              <NavButtonContainer>
+                <NavButton
+                  type="button"
+                  onClick={() => table.setPageIndex(0)}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  {"<<"}
+                </NavButton>
+                <NavButton
+                  type="button"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  {"<"}
+                </NavButton>
+                <NavText>
+                  {table.getState().pagination.pageIndex + 1} page of{" "}
+                  {table.getPageCount()}
+                </NavText>
+                <span>
+                  <NavInput
+                    type="number"
+                    defaultValue={table.getState().pagination.pageIndex + 1}
+                    onChange={(e) => {
+                      const page = e.target.value
+                        ? Number(e.target.value) - 1
+                        : 0;
+                      table.setPageIndex(page);
+                    }}
+                  />
+                </span>
+                <NavButton
+                  type="button"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  {">"}
+                </NavButton>
+                <NavButton
+                  type="button"
+                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                  disabled={!table.getCanNextPage()}
+                >
+                  {">>"}
+                </NavButton>
+              </NavButtonContainer>
+            </TableContainer>
+          </ProductListContainer>
+        )}
+        <CartContainer>
+          <Cart />
+        </CartContainer>
       </BottomContainer>
     </BodyContainer>
   );

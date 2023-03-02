@@ -46,9 +46,8 @@ const SearchInput = styled.input`
   width: 687px;
   font-size: 20px;
   border-radius: 10px;
-  ::placeholder {
-    padding-left: 28px;
-  }
+  padding-left: 28px;
+  outline: none;
 `;
 
 const LoginButton = styled.div`
@@ -134,6 +133,9 @@ export default function Header({ globalFilter, setGlobalFilter }: any) {
         <LoginButton>로그인</LoginButton>
       </TopContainer>
       <BottomContainer>
+        <MenuButton>
+          <Link href="/">홈</Link>
+        </MenuButton>
         <MenuButton>
           <Link href="/orders">주문내역</Link>
         </MenuButton>

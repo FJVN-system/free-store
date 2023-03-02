@@ -1,14 +1,20 @@
 import styled from "@emotion/styled";
 import { useQuery } from "@tanstack/react-query";
+import { flexRender } from "@tanstack/react-table";
 import { useState } from "react";
 import { GetUser } from "../../../api/user_api";
 import { useAddCart } from "../../../query/cartitems";
 
 const TableRow = styled.tr`
   border: 1px;
-  background-color: aliceblue;
+  background-color: transparent;
+  text-align: center;
 `;
-export default function ProductRow({ row, flexRender }: any) {
+const TableCell = styled.td<any>`
+  padding: 5px 5px;
+  border-bottom: 1px solid rgba(77, 130, 141, 0.2);
+`;
+export default function ProductRow({ row }: any) {
   const [qty, setQty] = useState<any>("");
   const qtyHandler = (e: any) => {
     setQty(Number(e.target.value));
@@ -32,18 +38,18 @@ export default function ProductRow({ row, flexRender }: any) {
     <TableRow key={row.id}>
       {row.getVisibleCells().map((cell: any) => {
         return (
-          <td key={cell.id}>
+          <TableCell key={cell.id}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </td>
+          </TableCell>
         );
       })}
 
-      <td style={{ display: "flex" }}>
+      <TableCell style={{ display: "flex" }}>
         <input value={qty} type="number" onChange={(e) => qtyHandler(e)} />
         <button type="button" onClick={() => handleSubmit()}>
           담기
         </button>
-      </td>
+      </TableCell>
     </TableRow>
   );
 }
