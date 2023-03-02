@@ -7,3 +7,14 @@ export async function GetProducts(companyId: any): Promise<any> {
 
   return data;
 }
+
+export async function GetProductsByCategory(
+  companyId: any,
+  category: any,
+): Promise<any> {
+  const { data } = await axios(
+    `http://fjvn-api-server-prod-1286120377.ap-northeast-2.elb.amazonaws.com/${companyId}/products/${category}`,
+  );
+
+  return data;
+}

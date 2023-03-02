@@ -1,17 +1,32 @@
 import { dehydrate, useQuery, useQueryClient } from "@tanstack/react-query";
-import { GetProducts } from "../api/products_api";
+import { GetProducts, GetProductsByCategory } from "../api/products_api";
 
 export const useGetProducts = (companyId: any) => {
   return useQuery({
     queryKey: ["products"],
-    queryFn: async () => {
-      const data = await GetProducts(companyId);
+    queryFn: () => {
+      const data = GetProducts(companyId);
       return data;
     },
     onError: (e) => {
       console.log("e", e);
     },
     enabled: !!companyId,
+  });
+};
+
+export const useGetProductsByCategory = (companyId: any, category: any) => {
+  console.log("cat", category);
+  return useQuery({
+    queryKey: ["productsByCategory"],
+    queryFn: async () => {
+      const data = await GetProductsByCategory(companyId, category);
+      return data;
+    },
+    onError: (e) => {
+      console.log("e", e);
+    },
+    // enabled: !!companyId,
   });
 };
 

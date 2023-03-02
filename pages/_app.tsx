@@ -19,10 +19,10 @@ export default function IndexPage({ Component, pageProps }: any) {
         <Head>
           <title>FJVN</title>
         </Head>
-        <Layout>
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </Layout>
+        {/* <Layout> */}
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+        {/* </Layout> */}
       </Hydrate>
     </QueryClientProvider>
   );

@@ -1,34 +1,139 @@
 import styled from "@emotion/styled";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Search from "../icons/Search";
+// import DebouncedInput from "../tanstackTable/debounceInput";
 
 const HeaderContainer = styled.div`
-  height: 30px;
-  background-color: gray;
-  padding: 2px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+  flex: 1;
+`;
+
+const TopContainer = styled.div`
+  height: 126px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #152b7b;
+`;
+
+const CompanyLogo = styled.div`
+  font-size: 36px;
+  color: #ffffff;
+  margin-left: 57px;
+  font-weight: bold;
+`;
+const SearchInputContainer = styled.div`
+  background-color: #ffffff;
+  border: 1px lightgray solid;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+
+  > svg {
+    color: gray;
+    height: 28px;
+    padding-right: 32px;
+  }
+`;
+const SearchInput = styled.input`
+  border: none;
+  height: 58px;
+  width: 687px;
+  font-size: 20px;
+  border-radius: 10px;
+  ::placeholder {
+    padding-left: 28px;
+  }
+`;
+
+const LoginButton = styled.div`
+  border: 1px #ffffff solid;
+  color: #ffffff;
+  border-radius: 10px;
+  height: 40px;
+  width: 120px;
+  margin-right: 53px;
+  display: flex;
+  justify-content: center;
   align-items: center;
 `;
 
-const RightContainer = styled.div`
+const BottomContainer = styled.div`
+  height: 58px;
   display: flex;
-`;
-const MenuButton = styled.div`
-  background-color: red;
-  margin: 0px 4px;
-  padding: 3px 5px;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  width: 100%;
+  box-shadow: #6969692c 0px 3px 6px;
+  margin-bottom: 10px;
 `;
 
-export default function Header(): any {
+const MenuButton = styled.div`
+  font-size: 24px;
+  color: #152b7b;
+  font-weight: bold;
+  padding: 0px 100px;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+`;
+
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number;
+  onChange: (value: string | number) => void;
+  debounce?: number;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value);
+    }, debounce);
+
+    return () => clearTimeout(timeout);
+  }, [value]);
+
+  return (
+    <SearchInputContainer>
+      <SearchInput
+        {...props}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <Search />
+    </SearchInputContainer>
+  );
+}
+
+export default function Header({ globalFilter, setGlobalFilter }: any) {
   return (
     <HeaderContainer>
-      <div>
-        <Link href="/">회사이름</Link>
-      </div>
-      <RightContainer>
-        {/* // TODO 로그인 후 처리 */}
-        <MenuButton>Hi! 유저이름</MenuButton>
+      <TopContainer>
+        <CompanyLogo>회사 로고</CompanyLogo>
+        <DebouncedInput
+          value={globalFilter ?? ""}
+          onChange={(value: any) => setGlobalFilter(String(value))}
+          placeholder="Search"
+        />
+        <LoginButton>로그인</LoginButton>
+      </TopContainer>
+      <BottomContainer>
         <MenuButton>
           <Link href="/orders">주문내역</Link>
         </MenuButton>
@@ -38,8 +143,7 @@ export default function Header(): any {
         <MenuButton>
           <Link href="/credit">크래딧</Link>
         </MenuButton>
-        <MenuButton>로그아웃</MenuButton>
-      </RightContainer>
+      </BottomContainer>
     </HeaderContainer>
   );
 }
