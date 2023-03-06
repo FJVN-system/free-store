@@ -21,7 +21,6 @@ import Header from "../../components/header";
 import ArrowDown from "../../components/icons/ArrowDown";
 import ArrowUp from "../../components/icons/ArrowUp";
 import { fuzzyFilter } from "../../components/tanstackTable/filter/fuzzyFilter";
-import { fuzzySort } from "../../components/tanstackTable/sorter/fuzzySort";
 
 const OrdersContainer = styled.div`
   display: flex;

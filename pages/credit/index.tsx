@@ -155,9 +155,10 @@ export default function Credit() {
     queryKey: ["credits"],
     queryFn: async () => {
       // TODO 로그인 후 처리
-      const data = await GetCredit(22222, user?.id);
+      const data = await GetCredit(user?.companyId, user?.id);
       return data;
     },
+    enabled: !!userData,
   });
 
   // 컬럼 선언 및 설정
