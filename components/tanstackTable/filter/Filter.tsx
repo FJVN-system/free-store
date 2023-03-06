@@ -7,11 +7,12 @@ import DebouncedInput from "../debounceInput";
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 150px;
+  align-items: center;
   > input {
+    width: 120px;
     border-radius: 3px;
     padding: 3px 5px;
-    margin: 3px 0px;
+    margin: 3px 0px 0px;
     border: none;
     outline: none;
   }

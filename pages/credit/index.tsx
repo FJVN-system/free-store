@@ -21,7 +21,6 @@ import Header from "../../components/header";
 import ArrowDown from "../../components/icons/ArrowDown";
 import ArrowUp from "../../components/icons/ArrowUp";
 import { fuzzyFilter } from "../../components/tanstackTable/filter/fuzzyFilter";
-import ProductRow from "../../components/tanstackTable/productListTable/productRow";
 
 const CreditContainer = styled.div`
   display: flex;
@@ -204,7 +203,7 @@ export default function Credit() {
         accessorFn: (row) => row.createdAt,
         id: "createdAt",
         header: "날짜",
-        cell: (info) => info.getValue(),
+        cell: (info) => info.getValue()?.substr(0, 10),
       },
     ],
     [],

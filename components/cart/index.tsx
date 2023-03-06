@@ -51,6 +51,14 @@ const TableHeaderCell = styled.div`
   cursor: pointer;
 `;
 
+const EmptyText = styled.div`
+  background-color: #e8e8e8;
+  padding: 20px 20px;
+  margin: 0px 2px;
+  text-align: center;
+  font-weight: bold;
+`;
+
 const TableRow = styled.tr`
   border: 1px;
   background-color: transparent;
@@ -154,38 +162,40 @@ export default function Cart() {
                       </TableHeaderCellWrapper>
                     );
                   })}
+                  <TableHeaderCell>총액</TableHeaderCell>
                 </TableHeader>
               ))}
             </thead>
-            {table.getRowModel().rows.length < 1 ? (
-              "장바구니가 비었습니다"
-            ) : (
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row
-                      .getVisibleCells()
-                      .map((cell) =>
-                        cell.column.id === "qty" ? (
-                          <CartQtyInput
-                            key={cell.id}
-                            cell={cell}
-                            flexRender={flexRender}
-                          />
-                        ) : (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
-                        ),
-                      )}
-                  </TableRow>
-                ))}
-              </tbody>
-            )}
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row
+                    .getVisibleCells()
+                    .map((cell) =>
+                      cell.column.id === "qty" ? (
+                        <CartQtyInput
+                          key={cell.id}
+                          cell={cell}
+                          flexRender={flexRender}
+                        />
+                      ) : (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ),
+                    )}
+                  <TableCell>{row.original.price * row.original.qty}</TableCell>
+                </TableRow>
+              ))}
+            </tbody>
+            {/* )} */}
           </Table>
+          {table.getRowModel().rows.length < 1 && (
+            <EmptyText>장바구니가 비었습니다</EmptyText>
+          )}
         </TableContainer>
       )}
 

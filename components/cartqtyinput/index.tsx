@@ -4,8 +4,29 @@ import { useEffect, useState } from "react";
 import { GetUser } from "../../api/user_api";
 import { useDeleteCart, useModifyCart } from "../../query/cartitems";
 
-const CartQtyInputContainer = styled.td`
-  display: flex;
+const CartQtyInputContainer = styled.div`
+  border: 1px solid #8f8f8fff;
+  border-radius: 10px;
+  padding: 3px;
+  width: 250px;
+  margin: 0 auto;
+`;
+const CartInput = styled.input`
+  border: none;
+  outline: none;
+  text-align: center;
+  width: 100px;
+`;
+
+const CartRowButton = styled.button`
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  font-size: 15px;
+  border-radius: 10px;
+  background-color: #152b7b;
+  color: #ffffff;
+  cursor: pointer;
 `;
 
 export default function CartQtyInput({ cell }: any) {
@@ -42,13 +63,13 @@ export default function CartQtyInput({ cell }: any) {
 
   return (
     <CartQtyInputContainer>
-      <input type="numbur" value={qty} onChange={handleCellValue} />
-      <button type="button" onClick={onModify}>
+      <CartInput type="numbur" value={qty} onChange={handleCellValue} />
+      <CartRowButton type="button" onClick={onModify}>
         수정
-      </button>
-      <button type="button" onClick={onDelete}>
+      </CartRowButton>
+      <CartRowButton type="button" onClick={onDelete}>
         삭제
-      </button>
+      </CartRowButton>
     </CartQtyInputContainer>
   );
 }

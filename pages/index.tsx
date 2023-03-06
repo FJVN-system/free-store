@@ -240,7 +240,7 @@ export default function IndexPage() {
                         );
                       })}
                       <TableHeaderCellWrapper>
-                        <TableHeaderCell>비고</TableHeaderCell>
+                        <TableHeaderCell>장바구니</TableHeaderCell>
                       </TableHeaderCellWrapper>
                     </TableHeader>
                   ))}

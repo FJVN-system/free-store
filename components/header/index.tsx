@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { GetUser } from "../../api/user_api";
 import Search from "../icons/Search";
 // import DebouncedInput from "../tanstackTable/debounceInput";
 
@@ -121,10 +123,13 @@ function DebouncedInput({
 }
 
 export default function Header({ globalFilter, setGlobalFilter }: any) {
+  const { data: userData, isLoading } = useQuery(["user"], () => GetUser(22));
+
   return (
     <HeaderContainer>
       <TopContainer>
-        <CompanyLogo>회사 로고</CompanyLogo>
+        {!isLoading && <CompanyLogo>{userData.companyName}</CompanyLogo>}
+
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value: any) => setGlobalFilter(String(value))}

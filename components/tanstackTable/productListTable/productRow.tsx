@@ -13,7 +13,30 @@ const TableRow = styled.tr`
 const TableCell = styled.td<any>`
   padding: 5px 5px;
   border-bottom: 1px solid rgba(77, 130, 141, 0.2);
+  justify-content: center;
 `;
+
+const AddCartInputContainer = styled.div`
+  border: 1px solid #8f8f8fff;
+  border-radius: 10px;
+  padding: 3px;
+`;
+const AddCartInputInput = styled.input`
+  border: none;
+  outline: none;
+  text-align: center;
+  width: 100px;
+`;
+const AddCartInputButton = styled.button`
+  border: none;
+  padding: 5px 10px;
+  font-size: 15px;
+  border-radius: 10px;
+  background-color: #152b7b;
+  color: #ffffff;
+  cursor: pointer;
+`;
+
 export default function ProductRow({ row }: any) {
   const [qty, setQty] = useState<any>("");
   const qtyHandler = (e: any) => {
@@ -28,7 +51,7 @@ export default function ProductRow({ row }: any) {
 
   const handleSubmit = () => {
     if (qty === "") {
-      alert("올바를 숫자를 써줘");
+      alert("올바를 수량을 써주세요.");
       return;
     }
     addCart(data);
@@ -45,10 +68,16 @@ export default function ProductRow({ row }: any) {
       })}
 
       <TableCell style={{ display: "flex" }}>
-        <input value={qty} type="number" onChange={(e) => qtyHandler(e)} />
-        <button type="button" onClick={() => handleSubmit()}>
-          담기
-        </button>
+        <AddCartInputContainer>
+          <AddCartInputInput
+            value={qty}
+            type="number"
+            onChange={(e) => qtyHandler(e)}
+          />
+          <AddCartInputButton type="button" onClick={() => handleSubmit()}>
+            담기
+          </AddCartInputButton>
+        </AddCartInputContainer>
       </TableCell>
     </TableRow>
   );

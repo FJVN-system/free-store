@@ -21,7 +21,7 @@ import Header from "../../components/header";
 import ArrowDown from "../../components/icons/ArrowDown";
 import ArrowUp from "../../components/icons/ArrowUp";
 import { fuzzyFilter } from "../../components/tanstackTable/filter/fuzzyFilter";
-import ProductRow from "../../components/tanstackTable/productListTable/productRow";
+import { fuzzySort } from "../../components/tanstackTable/sorter/fuzzySort";
 
 const OrdersContainer = styled.div`
   display: flex;
@@ -173,21 +173,57 @@ export default function Orders() {
         cell: (info) => info.getValue(),
       },
       {
+        accessorFn: (row) => row.createdAt,
+        id: "createdAt",
+        header: "주문일",
+        cell: (info) => info.getValue()?.substr(0, 10),
+      },
+      {
+        accessorFn: (row) => row.releaseDate,
+        id: "releaseDate",
+        header: "출시일",
+        cell: (info) => info.getValue()?.substr(0, 10),
+      },
+      {
+        accessorFn: (row) => row.preorderDeadline,
+        id: "preorderDeadline",
+        header: "주문마감일",
+        cell: (info) => info.getValue()?.substr(0, 10),
+      },
+      {
         accessorFn: (row) => row.productTitle,
         id: "productTitle",
-        header: "productTitle",
+        header: "상품명",
         cell: (info) => info.getValue(),
       },
       {
         accessorFn: (row) => row.qty,
         id: "qty",
-        header: "qty",
+        header: "수량",
         cell: (info) => info.getValue(),
       },
       {
         accessorFn: (row) => row.price,
         id: "price",
-        header: "price",
+        header: "가격",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.totalPrice,
+        id: "totalPrice",
+        header: "총액",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.barcode,
+        id: "barcode",
+        header: "바코드",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.sku,
+        id: "sku",
+        header: "SKU",
         cell: (info) => info.getValue(),
       },
     ],

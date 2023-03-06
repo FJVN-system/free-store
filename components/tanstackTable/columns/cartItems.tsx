@@ -10,19 +10,19 @@ export const cartItemsColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.productTitle,
     id: "productTitle",
-    header: "productTitle",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.qty,
-    id: "qty",
-    header: "qty",
+    header: "상품명",
     cell: (info) => info.getValue(),
   },
   {
     accessorFn: (row) => row.price,
     id: "price",
-    header: "price",
+    header: "가격",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorFn: (row) => row.qty,
+    id: "qty",
+    header: "수량",
     cell: (info) => info.getValue(),
   },
 ];

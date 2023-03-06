@@ -20,10 +20,8 @@ import { GetUser } from "../../api/user_api";
 import Header from "../../components/header";
 import ArrowDown from "../../components/icons/ArrowDown";
 import ArrowUp from "../../components/icons/ArrowUp";
-import Shipping from "../../components/shipping";
 import ShippingItems from "../../components/shippingitem";
 import { fuzzyFilter } from "../../components/tanstackTable/filter/fuzzyFilter";
-import ProductRow from "../../components/tanstackTable/productListTable/productRow";
 
 const ShippingContainer = styled.div`
   display: flex;
@@ -147,6 +145,16 @@ const NavInput = styled.input`
   }
 `;
 
+const ShippingDetail = styled.button`
+  border: none;
+  padding: 5px 10px;
+  font-size: 15px;
+  border-radius: 5px;
+  background-color: #152b7b;
+  color: #ffffff;
+  cursor: pointer;
+`;
+
 export default function Shippings() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -159,7 +167,7 @@ export default function Shippings() {
   const { data: shippingData, isLoading } = useQuery({
     queryKey: ["shippings"],
     queryFn: async () => {
-      const data = await GetShipping(22222, 22);
+      const data = await GetShipping(user?.companyId, user?.id);
       return data;
     },
     enabled: !!userData,
@@ -172,7 +180,7 @@ export default function Shippings() {
       {
         accessorFn: (row) => row.id,
         id: "id",
-        header: "주문번호",
+        header: "배송번호",
         cell: (info) => info.getValue(),
       },
       {
@@ -185,6 +193,42 @@ export default function Shippings() {
         accessorFn: (row) => row.shippingType,
         id: "shippingType",
         header: "배송사",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.shippedAt,
+        id: "shippedAt",
+        header: "배송일",
+        cell: (info) => info.getValue()?.substr(0, 10),
+      },
+      {
+        accessorFn: (row) => row.trackingNumber,
+        id: "trackingNumber",
+        header: "운송장번호",
+        cell: (info) => info.getValue()?.substr(0, 10),
+      },
+      {
+        accessorFn: (row) => row.totalCount,
+        id: "totalCount",
+        header: "상품종류",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.itemsCount,
+        id: "itemsCount",
+        header: "총수량",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.itemsPrice,
+        id: "itemsPrice",
+        header: "상품가격",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.shippingPrice,
+        id: "shippingPrice",
+        header: "배송비",
         cell: (info) => info.getValue(),
       },
       {
@@ -274,7 +318,7 @@ export default function Shippings() {
                         );
                       })}
                       <TableHeaderCellWrapper>
-                        <TableHeaderCell>비고</TableHeaderCell>
+                        <TableHeaderCell>내용</TableHeaderCell>
                       </TableHeaderCellWrapper>
                     </TableHeader>
                   ))}
@@ -291,9 +335,9 @@ export default function Shippings() {
                         </TableCell>
                       ))}
                       <TableCell>
-                        <button type="button" onClick={handler}>
+                        <ShippingDetail type="button" onClick={handler}>
                           배송상품내용
-                        </button>
+                        </ShippingDetail>
                       </TableCell>
                       {asd && <ShippingItems />}
                     </TableRow>
