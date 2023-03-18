@@ -1,5 +1,4 @@
-import { css, Global, keyframes } from '@emotion/react'
-import styled from '@emotion/styled'
+import { css, Global } from "@emotion/react";
 
 export const globalStyles = (
   <Global
@@ -7,10 +6,9 @@ export const globalStyles = (
       html,
       body {
         margin: 0;
-        background: papayawhip;
+        background: white;
         font-family: Helvetica, Arial, sans-serif;
       }
     `}
   />
-)
-
+);

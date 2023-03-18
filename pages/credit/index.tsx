@@ -1,47 +1,41 @@
 import styled from "@emotion/styled";
+import { useQuery } from "@tanstack/react-query";
+
 import {
-  useReactTable,
-  ColumnFiltersState,
+  flexRender,
   getCoreRowModel,
+  useReactTable,
+  ColumnDef,
+  getPaginationRowModel,
   getFilteredRowModel,
+  getSortedRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
-  getPaginationRowModel,
-  getSortedRowModel,
-  ColumnDef,
-  flexRender,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { GetCredit } from "../../api/credit_api";
+import { GetUser } from "../../api/user_api";
+import Header from "../../components/header";
+import ArrowDown from "../../components/icons/ArrowDown";
+import ArrowUp from "../../components/icons/ArrowUp";
+import { fuzzyFilter } from "../../components/tanstackTable/filter/fuzzyFilter";
 
-import Cart from "../components/cart";
-import Header from "../components/header";
-import { fuzzyFilter } from "../components/tanstackTable/filter/fuzzyFilter";
-import { productListColumns } from "../components/tanstackTable/columns/productList";
-import { useGetProducts } from "../query/product";
-import { GetUser } from "../api/user_api";
-import ArrowDown from "../components/icons/ArrowDown";
-import ArrowUp from "../components/icons/ArrowUp";
-import Filter from "../components/tanstackTable/filter/Filter";
-import ProductRow from "../components/tanstackTable/productListTable/productRow";
-
-const BodyContainer = styled.div`
+const CreditContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #e5f1fc;
   height: 100vh;
 `;
+
 const TopContainer = styled.div``;
 const BottomContainer = styled.div`
   display: flex;
 `;
-const CartContainer = styled.div`
-  flex: 0.3;
-`;
 
 const ProductListContainer = styled.div`
-  flex: 0.7;
+  width: 100%;
   margin-top: 10px;
 `;
 
@@ -100,6 +94,12 @@ const TableHeaderCell = styled.div`
   cursor: pointer;
 `;
 
+const TableRow = styled.tr<any>`
+  border: 1px;
+  background-color: transparent;
+  text-align: center;
+`;
+
 const TableCell = styled.td<any>`
   padding: 5px 5px;
   border-bottom: 1px solid rgba(77, 130, 141, 0.2);
@@ -144,38 +144,90 @@ const NavInput = styled.input`
   }
 `;
 
-export default function IndexPage() {
+export default function Credit() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const { data: user } = useQuery(["user"], () => GetUser(22));
+  const { data: userData } = useQuery(["user"], () => GetUser(22));
+  const user = useMemo(() => userData || [], [userData]);
 
-  const { data: productData, isLoading } = useGetProducts(user?.companyId);
+  const { data: creditData, isLoading } = useQuery({
+    queryKey: ["credits"],
+    queryFn: async () => {
+      // TODO 로그인 후 처리
+      const data = await GetCredit(user?.companyId, user?.id);
+      return data;
+    },
+    enabled: !!userData,
+  });
+
+  // 컬럼 선언 및 설정
+  const columns = useMemo<ColumnDef<any, any>[]>(
+    () => [
+      {
+        accessorFn: (row) => row.id,
+        id: "id",
+        header: "ID",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.content,
+        id: "content",
+        header: "내용",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.deposit,
+        id: "deposit",
+        header: "입금",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.withdraw,
+        id: "withdraw",
+        header: "출금",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.balance,
+        id: "balance",
+        header: "잔액",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.memo,
+        id: "memo",
+        header: "메모",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.createdAt,
+        id: "createdAt",
+        header: "날짜",
+        cell: (info) => info.getValue()?.substr(0, 10),
+      },
+    ],
+    [],
+  );
 
   // 데이터 초기화
-  const data = useMemo(() => productData || [], [productData]);
-
-  const columns = useMemo<ColumnDef<any, any>[]>(() => productListColumns, []);
-
-  // 테이블 훅
-  const table = useReactTable<any>({
+  const data = useMemo(() => creditData || [], [creditData]);
+  // @ts-ignore
+  const table = useReactTable({
     data,
     columns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
     state: {
       columnFilters,
       globalFilter,
     },
     initialState: { pagination: { pageSize: 30 } },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
+    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+    globalFilterFn: fuzzyFilter,
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -183,9 +235,8 @@ export default function IndexPage() {
     debugHeaders: true,
     debugColumns: false,
   });
-
   return (
-    <BodyContainer>
+    <CreditContainer>
       <TopContainer>
         <Header globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
       </TopContainer>
@@ -195,7 +246,7 @@ export default function IndexPage() {
           "로딩중"
         ) : (
           <ProductListContainer>
-            <TitleContainer>상품</TitleContainer>
+            <TitleContainer>크레딧</TitleContainer>
             <TableContainer>
               <Table>
                 <thead>
@@ -208,46 +259,38 @@ export default function IndexPage() {
                             colSpan={header.colSpan}
                           >
                             {header.isPlaceholder ? null : (
-                              <>
-                                <TableHeaderCell
-                                  {...{
-                                    onClick:
-                                      header.column.getToggleSortingHandler(),
-                                  }}
-                                >
-                                  <div style={{ marginRight: "5px" }}>
-                                    {flexRender(
-                                      header.column.columnDef.header,
-                                      header.getContext(),
-                                    )}
-                                  </div>
-                                  {{
-                                    asc: <ArrowDown />,
-                                    desc: <ArrowUp />,
-                                  }[header.column.getIsSorted() as string] ?? (
-                                    <ArrowDown />
+                              <TableHeaderCell
+                                {...{
+                                  onClick:
+                                    header.column.getToggleSortingHandler(),
+                                }}
+                              >
+                                <div style={{ marginRight: "5px" }}>
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
                                   )}
-                                </TableHeaderCell>
-                                {header.column.getCanFilter() ? (
-                                  <Filter
-                                    column={header.column}
-                                    table={table}
-                                  />
-                                ) : null}
-                              </>
+                                </div>
+                                {{
+                                  asc: <ArrowDown />,
+                                  desc: <ArrowUp />,
+                                }[header.column.getIsSorted() as string] ?? (
+                                  <ArrowDown />
+                                )}
+                              </TableHeaderCell>
                             )}
                           </TableHeaderCellWrapper>
                         );
                       })}
                       <TableHeaderCellWrapper>
-                        <TableHeaderCell>장바구니</TableHeaderCell>
+                        <TableHeaderCell>비고</TableHeaderCell>
                       </TableHeaderCellWrapper>
                     </TableHeader>
                   ))}
                 </thead>
                 <tbody>
                   {table.getRowModel().rows.map((row: any) => (
-                    <ProductRow key={row.id} row={row}>
+                    <TableRow key={row.id} row={row}>
                       {row.getVisibleCells().map((cell: any) => {
                         return (
                           <TableCell key={cell.id} cell={cell}>
@@ -258,7 +301,7 @@ export default function IndexPage() {
                           </TableCell>
                         );
                       })}
-                    </ProductRow>
+                    </TableRow>
                   ))}
                 </tbody>
               </Table>
@@ -331,10 +374,7 @@ export default function IndexPage() {
             </TableContainer>
           </ProductListContainer>
         )}
-        <CartContainer>
-          <Cart />
-        </CartContainer>
       </BottomContainer>
-    </BodyContainer>
+    </CreditContainer>
   );
 }
