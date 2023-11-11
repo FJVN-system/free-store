@@ -147,9 +147,6 @@ export default function Header({ globalFilter, setGlobalFilter }: any) {
         <MenuButton>
           <Link href="/shippings">배송내역</Link>
         </MenuButton>
-        <MenuButton>
-          <Link href="/credit">크래딧</Link>
-        </MenuButton>
       </BottomContainer>
     </HeaderContainer>
   );

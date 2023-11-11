@@ -7,12 +7,12 @@ import {
 } from "@tanstack/react-table";
 import { useEffect, useMemo } from "react";
 import { GetUser } from "../../api/user_api";
-import { useGetCartItems } from "../../query/cartitems";
 import { useCreateOrder } from "../../query/order";
 import CartQtyInput from "../cartqtyinput";
 import ArrowDown from "../icons/ArrowDown";
 import ArrowUp from "../icons/ArrowUp";
 import { cartItemsColumns } from "../tanstackTable/columns/cartItems";
+import { useGetCartsItems } from "../../query/cartitems";
 
 const CartContainer = styled.div`
   margin-top: 10px;
@@ -25,7 +25,7 @@ const TitleContainer = styled.div`
 `;
 const TableContainer = styled.div`
   padding: 10px 10px;
-  margin-right: 20px;
+  margin: 20px;
   border-radius: 5px;
   background-color: #fbfeff;
 `;
@@ -93,8 +93,7 @@ export default function Cart() {
   // TODO 로그인 후 처리
   const { data: user } = useQuery(["user"], () => GetUser(22));
 
-  const { data: cartItemsData, isLoading } = useGetCartItems(user?.id);
-
+  const { data: cartItemsData, isLoading } = useGetCartsItems(11111111);
   // 데이터 초기화
   const data = useMemo(() => cartItemsData || [], [cartItemsData]);
   const columns = useMemo(() => cartItemsColumns || [], []);
@@ -105,7 +104,6 @@ export default function Cart() {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
   const { mutate: createOrder, isSuccess, data: succesData } = useCreateOrder();
 
   const onSubmit = () => {

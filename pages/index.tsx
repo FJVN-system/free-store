@@ -18,13 +18,13 @@ import { useQuery } from "@tanstack/react-query";
 import Cart from "../components/cart";
 import Header from "../components/header";
 import { fuzzyFilter } from "../components/tanstackTable/filter/fuzzyFilter";
-import { productListColumns } from "../components/tanstackTable/columns/productList";
-import { useGetProducts } from "../query/product";
+import { pocaListColumns } from "../components/tanstackTable/columns/pocaList";
 import { GetUser } from "../api/user_api";
 import ArrowDown from "../components/icons/ArrowDown";
 import ArrowUp from "../components/icons/ArrowUp";
 import Filter from "../components/tanstackTable/filter/Filter";
 import ProductRow from "../components/tanstackTable/productListTable/productRow";
+import { useGetPocas } from "../query/poca";
 
 const BodyContainer = styled.div`
   display: flex;
@@ -35,6 +35,7 @@ const BodyContainer = styled.div`
 const TopContainer = styled.div``;
 const BottomContainer = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 const CartContainer = styled.div`
   flex: 0.3;
@@ -150,12 +151,12 @@ export default function IndexPage() {
 
   const { data: user } = useQuery(["user"], () => GetUser(22));
 
-  const { data: productData, isLoading } = useGetProducts(user?.companyId);
+  const { data: pocaData, isLoading } = useGetPocas();
 
   // 데이터 초기화
-  const data = useMemo(() => productData || [], [productData]);
+  const data = useMemo(() => pocaData || [], [pocaData]);
 
-  const columns = useMemo<ColumnDef<any, any>[]>(() => productListColumns, []);
+  const columns = useMemo<ColumnDef<any, any>[]>(() => pocaListColumns, []);
 
   // 테이블 훅
   const table = useReactTable<any>({
@@ -201,6 +202,9 @@ export default function IndexPage() {
                 <thead>
                   {table.getHeaderGroups().map((headerGroup: any) => (
                     <TableHeader key={headerGroup.id}>
+                      <TableHeaderCellWrapper>
+                        <TableHeaderCell>사진</TableHeaderCell>
+                      </TableHeaderCellWrapper>
                       {headerGroup.headers.map((header: any) => {
                         return (
                           <TableHeaderCellWrapper
@@ -228,7 +232,8 @@ export default function IndexPage() {
                                     <ArrowDown />
                                   )}
                                 </TableHeaderCell>
-                                {header.column.getCanFilter() ? (
+                                {header.id === "nickname" &&
+                                header.column.getCanFilter() ? (
                                   <Filter
                                     column={header.column}
                                     table={table}
@@ -246,20 +251,22 @@ export default function IndexPage() {
                   ))}
                 </thead>
                 <tbody>
-                  {table.getRowModel().rows.map((row: any) => (
-                    <ProductRow key={row.id} row={row}>
-                      {row.getVisibleCells().map((cell: any) => {
-                        return (
-                          <TableCell key={cell.id} cell={cell}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </ProductRow>
-                  ))}
+                  {table.getRowModel().rows.map((row: any) => {
+                    return (
+                      <ProductRow key={row.id} row={row}>
+                        {row.getVisibleCells().map((cell: any) => {
+                          return (
+                            <TableCell key={cell.id} cell={cell}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </ProductRow>
+                    );
+                  })}
                 </tbody>
               </Table>
               <TotalPerPageContainer>

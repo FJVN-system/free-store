@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender } from "@tanstack/react-table";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { GetUser } from "../../../api/user_api";
 import { useAddCart } from "../../../query/cartitems";
 
@@ -42,23 +42,31 @@ export default function ProductRow({ row }: any) {
   const qtyHandler = (e: any) => {
     setQty(Number(e.target.value));
   };
-  // TODO 성능개선 : 유저아이디랑 핸들 섬밋은 부모로부터?
 
   const { data: user } = useQuery(["user"], () => GetUser(22));
 
-  const data = { usersId: user?.id, productId: row.original.id, qty };
-  const { mutate: addCart } = useAddCart();
+  // const data = { userId: user?.id, pocaId: row.original.id, qty };
+  const data = { userId: 11111111, pocaId: row.original.id, qty };
+  const {
+    data: addData,
+    isLoading,
+    isSuccess: isAddSuccess,
+    status: isAddStatus,
+    mutateAsync: addCart,
+  } = useAddCart(data);
+  const addCartsItemsData = useMemo(() => addData || [], [addData]);
 
   const handleSubmit = () => {
     if (qty === "") {
       alert("올바를 수량을 써주세요.");
       return;
     }
-    addCart(data);
+    addCart();
     setQty("");
   };
   return (
     <TableRow key={row.id}>
+      <div>썸네일</div>
       {row.getVisibleCells().map((cell: any) => {
         return (
           <TableCell key={cell.id}>

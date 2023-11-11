@@ -30,11 +30,15 @@ const CartRowButton = styled.button`
 `;
 
 export default function CartQtyInput({ cell }: any) {
-  const { data: user } = useQuery(["user"], () => GetUser(22));
-  const { mutate: deleteCart } = useDeleteCart();
-  const { mutate: modifyCart, isSuccess, data: modifyData } = useModifyCart();
+  const [qty, setQty] = useState(0);
 
-  const [qty, setQty] = useState(cell.row.original.qty);
+  const { data: user } = useQuery(["user"], () => GetUser(22));
+  const { mutate: deleteCart } = useDeleteCart(cell.row.original.id);
+  const {
+    mutate: modifyCart,
+    isSuccess,
+    data: modifyData,
+  } = useModifyCart({ cartItemId: cell.row.original.id, qty });
 
   const data = { usersId: user?.id, cartItemId: cell.row.original.id, qty };
   const handleCellValue = (e: any) => {
@@ -43,13 +47,16 @@ export default function CartQtyInput({ cell }: any) {
 
   const onDelete = (e: any) => {
     e.preventDefault();
-    deleteCart(data);
+    deleteCart();
   };
 
   const onModify = (e: any) => {
     e.preventDefault();
-    modifyCart(data);
+    modifyCart();
   };
+  useEffect(() => {
+    setQty(cell.row.original.qty);
+  }, [cell.row.original.qty]);
 
   useEffect(() => {
     if (isSuccess) {
